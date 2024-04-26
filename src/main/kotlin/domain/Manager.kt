@@ -3,25 +3,23 @@ package domain
 import data.Car
 import data.Owner
 
-
-class Manager {
-
-    private val parking = Parking.create()
-
-    fun park(input:String) {
+class Manager(private val parkingRepository: ParkingRepository) {
+    fun park(input: String) {
         val regex = Regex("/park [a-zA-Z ]+[a-zA-Z ]\\d{3}[a-zA-Z]{2}\\d{2,3} [a-zA-Z ]+[a-zA-Z ]")
         if (regex.matches(input)) {
             val words = input.split(" ").filter { it != "/park" }
             val filteredWords = words.dropLast(2)
-            val freePlace = Parking.findFreePlace(parking)
+            val freePlace = parkingRepository.findFreePlaces()
             if (freePlace != null) {
-                parking[freePlace] = Car(
-                    color = filteredWords[0],
-                    model = filteredWords[1],
-                    number = filteredWords[2],
-                    owner = Owner(name = words[3], lastName = words[4])
+                parkingRepository.putCar(
+                    freePlace, Car(
+                        color = filteredWords[0],
+                        model = filteredWords[1],
+                        number = filteredWords[2],
+                        owner = Owner(name = words[3], lastName = words[4])
+                    )
                 )
-                println(parking.toString())
+                println("$filteredWords была припаркована на место $freePlace")
             } else {
                 println("Все места закончились")
             }
@@ -30,7 +28,7 @@ class Manager {
         }
     }
 
-    fun returnCar(input:String) {
+    fun returnCar(input: String) {
         val regex = Regex("/return [a-zA-Z ]\\d{3}[a-zA-Z]{2}\\d{2,3} [a-zA-Z ]+[a-zA-Z ]")
         if (regex.matches(input)) {
             val words = input.split(" ").filter { it != "/return" }
@@ -39,11 +37,12 @@ class Manager {
                 name = words[1],
                 lastName = words[2],
             )
-            parking.entries.find {
-                it.value?.number == carNumber
+            parkingRepository.places.find {
+                it.second?.number == carNumber
             }?.also {
-                if (it.value?.owner == owner) {
-                    parking[it.key] = null
+                if (it.second?.owner == owner) {
+                    parkingRepository.dropCar(it.first)
+                    println("Место ${it.first} освобождено")
                 } else {
                     println("Вы не владелец машины")
                 }
@@ -56,39 +55,35 @@ class Manager {
     }
 
 
-    fun parkInfoByCar(input:String) {
+    fun getPlaceNumberByCarNumber(input: String) {
         //Печатает место, где припаркованна машина,по ее номеру
         val regex = Regex("/show_car [a-zA-Z ]\\d{3}[a-zA-Z]{2}\\d{2,3}")
         if (regex.matches(input)) {
             val words = input.split(" ").filter { it != "/show_car" }
             val carNumber = words[0]
-            parking.entries.find {
-                it.value?.number == carNumber
-            }?.let {
-                println(it.key)
+            parkingRepository.findCarByNumber(carNumber)?.let {
+                println("Машина $carNumber на месте ${it.first}")
             } ?: println("Такой машины нет на парковке")
         } else {
             println("Что-то пошло не так. Проверьте правильность ввода: /show_car Номер(А111АА777)")
         }
     }
 
-    fun parkInfoByPlace(input:String) {
+    fun getCarByPlaceNumber(input: String) {
         //Печатает информацию о машине по месту на парковке
         val regex = Regex("/show_place P\\d")
         if (regex.matches(input)) {
             val words = input.split(" ").filter { it != "/show_place" }
             val placeNumber = words[0]
-            parking.entries.find {
-                it.key == placeNumber
-            }?.let {
-                println(it.value)
+            parkingRepository.findPlaceNumber(placeNumber)?.let {
+                println("На месте $placeNumber находится машина ${it.second}")
             } ?: println("Такого парковочного места нет")
         } else {
-            println("Что-то пошло не так. Проверьте правильность ввода: /show_place P1 - P${parking.size}")
+            println("Что-то пошло не так. Проверьте правильность ввода: /show_place P1 - PN")
         }
     }
 
-    fun help(input:String) {
+    fun help(input: String) {
         //Выводит список команд
         if (input == "/help") {
             println(
@@ -101,35 +96,5 @@ class Manager {
         """.trimIndent()
             )
         }
-    }
-
-    private fun enableTestParking() {
-        parking["P1"] = Car(
-            color = "Red",
-            model = "Ford",
-            number = "A777AA777",
-            owner = Owner(
-                name = "Andrey",
-                lastName = "Sirotin"
-            )
-        )
-        parking["P2"] = Car(
-            color = "Red",
-            model = "Ford",
-            number = "A777AB777",
-            owner = Owner(
-                name = "Andrey",
-                lastName = "Sirotin"
-            )
-        )
-        parking["P3"] = Car(
-            color = "Red",
-            model = "Ford",
-            number = "A777AC777",
-            owner = Owner(
-                name = "Andrey",
-                lastName = "Sirotin"
-            )
-        )
     }
 }
