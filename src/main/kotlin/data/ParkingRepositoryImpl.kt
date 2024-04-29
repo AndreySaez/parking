@@ -1,9 +1,8 @@
 package data
 
 import domain.Parking
-import domain.ParkingRepository
 
-class ParkingRepositoryImpl() : ParkingRepository {
+class ParkingRepositoryImpl : ParkingRepository {
 
     private val parking = Parking.create()
 

@@ -1,7 +1,8 @@
-import domain.Manager
+import domain.manager.Manager
 
 fun main(args: Array<String>) {
-    Manager().start()
+    val manager = Manager()
+    manager.start()
 }
 
 

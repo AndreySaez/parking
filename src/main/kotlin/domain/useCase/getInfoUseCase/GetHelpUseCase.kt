@@ -1,18 +1,26 @@
 package domain.useCase.getInfoUseCase
 
-class GetHelpUseCase() {
-    fun help(input: String) {
+import domain.manager.Command
+
+class GetHelpUseCase : Command {
+    private fun help() {
         //Выводит список команд
-        if (input == "/help") {
-            println(
-                """
+        println(
+            """
          Список доступных команд:
          /park
          /return
          /show_car
          /show_place
         """.trimIndent()
-            )
-        }
+        )
+    }
+
+    override fun canHandle(input: String): Boolean {
+        return input == "/help"
+    }
+
+    override fun handle(input: String) {
+        help()
     }
 }
