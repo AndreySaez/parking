@@ -1,4 +1,6 @@
-package data
+package data.repository
+
+import data.Car
 
 interface ParkingRepository {
     val places: Iterable<Pair<String, Car?>>

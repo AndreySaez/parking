@@ -1,7 +1,7 @@
 package domain.useCase.getInfoUseCase
 
-import data.ParkingRepository
-import data.findPlaceNumber
+import data.repository.ParkingRepository
+import data.repository.findPlaceNumber
 import domain.manager.Command
 
 class GetCarByPlaceNumberUseCase(private val parkingRepository: ParkingRepository) : Command {

@@ -1,7 +1,7 @@
 package domain.useCase.parkingUseCase
 
 import data.Owner
-import data.ParkingRepository
+import data.repository.ParkingRepository
 import domain.manager.Command
 
 class ReturnCarUseCase(private val parkingRepository: ParkingRepository) : Command {

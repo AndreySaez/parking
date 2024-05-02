@@ -2,8 +2,8 @@ package domain.useCase.parkingUseCase
 
 import data.Car
 import data.Owner
-import data.ParkingRepository
-import data.findFreePlaces
+import data.repository.ParkingRepository
+import data.repository.findFreePlaces
 import domain.manager.Command
 
 class ParkUseCase(private val parkingRepository: ParkingRepository) : Command {

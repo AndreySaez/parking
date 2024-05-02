@@ -1,6 +1,6 @@
 import domain.manager.Manager
 
-fun main(args: Array<String>) {
+fun main() {
     val manager = Manager()
     manager.start()
 }

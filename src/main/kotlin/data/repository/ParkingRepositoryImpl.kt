@@ -1,5 +1,6 @@
-package data
+package data.repository
 
+import data.Car
 import domain.Parking
 
 class ParkingRepositoryImpl : ParkingRepository {
