@@ -11,13 +11,4 @@ object Parking {
         }
         return parking
     }
-
-    fun findFreePlace(parking: Map<String, Car?>): String? {
-        parking.forEach {
-            if (it.value == null) return it.key
-        }
-
-        return null
-    }
-
 }
